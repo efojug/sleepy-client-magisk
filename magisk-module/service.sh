@@ -12,18 +12,6 @@ log() {
 }
 sleepy=0
 
-is_game() {
-  pkg="$1"
-  for game in $GAME_PACKAGES; do
-    if [ "$game" = "$pkg" ]; then
-      #log "检测到游戏进程: $pkg，延长监测间隔 600 秒"
-      sleep 300
-      return 0
-    fi
-  done
-  sleep 45
-}
-
 get_app_name() {
   package_name="$1"
 
@@ -75,7 +63,7 @@ send_status() {
     res_up="$app_name [电量:$battery_level%]"
   fi
 
-  curl -s -k --connect-timeout 20 "{$URL}" \
+  curl -s -k --connect-timeout 15 "{$URL}" \
     -X POST \
     -H "Content-Type: application/json" \
     -d '{"secret": "'"${SECRET}"'", "device": '"${DEVICE}"', "status": '"${using}"', "app": "'"$res_up"'"}'
@@ -86,7 +74,7 @@ LAST_PACKAGE=""
 > "$LOG_PATH"
 log "service start"
 
-sleep 5
+sleep 10
 
 while true; do
   isLock=$(dumpsys window policy | sed -n 's/.*showing=\([a-z]*\).*/\1/p')
@@ -118,5 +106,5 @@ while true; do
     LAST_PACKAGE="$PACKAGE_NAME"
   fi
   
-  is_game "$PACKAGE_NAME"
+  sleep 150
 done
