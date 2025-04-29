@@ -106,5 +106,5 @@ while true; do
     LAST_PACKAGE="$PACKAGE_NAME"
   fi
   
-  sleep 150
+  sleep 120
 done
